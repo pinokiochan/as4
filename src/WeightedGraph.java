@@ -3,8 +3,10 @@ import java.util.Map;
 
 public class WeightedGraph<V> {
     private Map<V, Vertex<V>> vertices;
+    private boolean directed;
     public WeightedGraph(){
         this.vertices = new HashMap<>();
+        this.directed = directed;
     }
     public void addVertex(V data){
         vertices.put(data, new Vertex<>(data));
@@ -12,8 +14,17 @@ public class WeightedGraph<V> {
     public void addEdge(V source, V dest, double weight) {
         Vertex<V> srcVertex = vertices.get(source);
         Vertex<V> destVertex = vertices.get(dest);
-        if (srcVertex != null && destVertex != null) {
-            srcVertex.addAdjacentVertex(destVertex, weight);
+        if (srcVertex == null){
+            srcVertex = new Vertex<>(source);
+            vertices.put(source, srcVertex);
+        }
+        if(destVertex == null){
+            destVertex = new Vertex<>(dest);
+            vertices.put(dest, destVertex);
+        }
+        srcVertex.addAdjacentVertex(destVertex, weight);
+        if(!directed){
+            destVertex.addAdjacentVertex(srcVertex, weight);
         }
     }
     public Vertex<V> getVertex(V data){
